@@ -2,7 +2,9 @@
 # Installe, après confirmation, ce dont SigilDesk a besoin au niveau du système.
 # À lancer une fois, depuis un compte administrateur (sudo demande le mot de passe) :
 #
-#   - paquets PySide6 et QML de Lubuntu, wmctrl et VLC (scripts/apt-packages.txt) ;
+#   - paquets PySide6 et QML de Lubuntu, wmctrl (scripts/apt-packages.txt), puis VLC
+#     et le pilote VA-API i965 du Celeron N3060, pour le décodage vidéo matériel
+#     (scripts/apt-packages-asus.txt) ;
 #   - traduction de qpdfview (qpdfview-translations, déjà présente dans Lubuntu
 #     26.04 : simple garantie ; qpdfview suit la langue de la session) et pack
 #     de langue française ;
@@ -39,7 +41,8 @@ for arg in "$@"; do
     esac
 done
 
-mapfile -t packages < <(grep -v '^\s*$' "$here/apt-packages.txt")
+# Les deux listes acceptent des lignes vides et des commentaires (#).
+mapfile -t packages < <(grep -hv '^\s*\(#\|$\)' "$here/apt-packages.txt" "$here/apt-packages-asus.txt")
 packages+=(qpdfview-translations language-pack-fr)
 if [ "$auto_updates" = 1 ]; then packages+=(unattended-upgrades update-notifier-common); fi
 has_chromium=0

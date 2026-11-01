@@ -13,7 +13,7 @@ rien ne le vérifie encore.
 
 Avec `scripts/vm-lubuntu.sh`, la clé USB virtuelle et `vm-installe.sh` :
 
-- les paquets de `scripts/apt-packages.txt` s'installent, puis `install-user.sh` et SigilDesk démarrent ;
+- les paquets de `scripts/apt-packages.txt` et `apt-packages-asus.txt` s'installent, puis `install-user.sh` et SigilDesk démarrent ;
 - le plein écran masque le panneau LXQt, sans débordement (écran de 1368×768) ;
 - `Ctrl+Alt+M` réduit SigilDesk, qui reste dans la barre des tâches ;
 - une relance ramène la fenêtre existante, sans en ouvrir une deuxième ;
@@ -96,4 +96,4 @@ redémarrage réels sur l'installation (et non sur la session live).
 | Pas d'erreur d'économiseur d'écran au réveil (sans verrouilleur) | **Testé** / vu sur l'ASUS (réglage à la main) | `test_branding.SessionLockTests`, `test_scripts`. Sur l'ASUS, la case de LXQt décochée a supprimé l'erreur ; l'installation le fait désormais d'office. |
 | Icône Wi-Fi à jour (au réveil notamment) | **Testé** (relevé toutes les 3 s) / **à valider sur ASUS** | Relevé passé de 30 s à 3 s (`test_system_status`). |
 | Performances sur N3060 / 4 Go | **Non testé** | À mesurer avec `scripts/measure.py` sur l'ASUS. |
-| Lecture MP4 720p fluide, PDF, clé USB | **Non testé** | Dépend de VLC/mpv, qpdfview et du matériel : [tests-manuels.md](tests-manuels.md). |
+| Lecture MP4 720p fluide, PDF, clé USB | **Non testé** | Dépend de VLC/mpv, qpdfview et du matériel : [tests-manuels.md](tests-manuels.md). Depuis le 2026-11-01, `install-system-deps.sh` pose le pilote VA-API `i965-va-driver` (décodage H.264/HEVC par la puce) et `--doctor` / *Paramètres › Applications* disent si la puce décode (`infra/video_decoding.py`, `test_video_decoding`). |

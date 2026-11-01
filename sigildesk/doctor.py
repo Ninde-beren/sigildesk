@@ -1,8 +1,9 @@
 """`sigildesk --doctor` : diagnostic lisible, sans fenêtre, sans rien modifier.
 
 Vérifie dans l'ordre ce dont l'accueil a besoin : modules QML, formats
-d'image, HTTPS pour la météo, applications lancées par les tuiles, extinction
-par la session, mises à jour automatiques, associations de fichiers. Chaque
+d'image, HTTPS pour la météo, applications lancées par les tuiles, décodage
+vidéo matériel, extinction par la session, mises à jour automatiques,
+associations de fichiers. Chaque
 ligne commence par [ok], [--] (optionnel absent), [MANQUE] ou [!!].
 """
 
@@ -27,6 +28,7 @@ def run_doctor() -> int:
     from sigildesk.infra.lxqt import SessionPower
     from sigildesk.infra.processes import find_program
     from sigildesk.infra.updates import auto_updates_status, reboot_required
+    from sigildesk.infra.video_decoding import check_hardware_decoding
     from sigildesk.infra.xdg import check_associations
 
     app = QGuiApplication(sys.argv[:1])
@@ -61,6 +63,9 @@ def run_doctor() -> int:
     paths = {t["id"]: t["path"] for t in tools}
     if not (paths["chromium"] or paths["firefox"] or paths["xdg-open"]):
         ok = False
+    decoding = check_hardware_decoding(find_program("vainfo"))
+    print(f"[{'ok' if decoding.status == 'ok' else '--'}] décodage vidéo matériel : {decoding.label}"
+          + (f"  → {decoding.hint}" if decoding.hint else ""))
 
     session = SessionPower.detect()
     print(f"[{'ok' if session else '--'}] extinction et redémarrage par la session LXQt"

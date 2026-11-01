@@ -12,4 +12,3 @@ qml6-module-qtqml-workerscript
 qt6-svg-plugins
 qt6-image-formats-plugins
 wmctrl
-vlc

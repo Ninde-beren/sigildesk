@@ -14,6 +14,7 @@ PanelFrame {
     property int section: 0
     property var tools: []
     property var associations: []
+    property var decoding: ({})  // rapport du décodage vidéo matériel (status, label, hint)
     property bool checking: false
     signal wallpaperRequested()
     signal minimizeRequested()
@@ -35,9 +36,10 @@ PanelFrame {
 
     Connections {
         target: app
-        function onDiagnosticsReady(toolList, associationList) {
+        function onDiagnosticsReady(toolList, associationList, decodingReport) {
             panel.tools = toolList
             panel.associations = associationList
+            panel.decoding = decodingReport
             panel.checking = false
         }
     }
@@ -447,6 +449,17 @@ PanelFrame {
                         font.pixelSize: theme.fontBody
                         color: modelData.path ? theme.textColor : theme.mutedColor
                     }
+                }
+                Text {
+                    visible: panel.decoding.status !== undefined
+                    width: applications.width
+                    wrapMode: Text.WordWrap
+                    text: (panel.decoding.status === "ok" ? "✓  " : panel.decoding.status === "aucun" ? "!  " : "–  ")
+                        + "Décodage vidéo matériel : " + panel.decoding.label
+                        + (panel.decoding.hint ? " — " + panel.decoding.hint : "")
+                    font.pixelSize: theme.fontBody
+                    color: panel.decoding.status === "ok" ? theme.textColor
+                         : panel.decoding.status === "aucun" ? theme.danger : theme.mutedColor
                 }
                 Item { width: 1; height: panel.associations.length ? 8 : 0 }
                 Repeater {

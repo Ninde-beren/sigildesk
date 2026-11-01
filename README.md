@@ -107,8 +107,12 @@ scripts/install-system-deps.sh
 
 Il installe :
 - les paquets de [scripts/apt-packages.txt](scripts/apt-packages.txt) : PySide6
-  et les modules QML, `wmctrl` (fenêtres ouvertes) et **VLC**, le lecteur vidéo
-  attendu par la tuile Vidéos (Lubuntu le livre, le paquet le garantit) ;
+  et les modules QML, `wmctrl` (fenêtres ouvertes) ; puis ceux de
+  [scripts/apt-packages-asus.txt](scripts/apt-packages-asus.txt), propres à la
+  machine : **VLC**, le lecteur vidéo attendu par la tuile Vidéos (Lubuntu le
+  livre, le paquet le garantit), et **`i965-va-driver`**, le pilote VA-API du
+  Celeron N3060, sans lequel VLC décode H.264 et HEVC en logiciel et une vidéo
+  1080p saccade ou se fige (`vainfo` sert à le vérifier) ;
 - `qpdfview-translations`, la traduction du lecteur PDF. Lubuntu 26.04 l'a
   déjà ; c'est ici une simple garantie. qpdfview suit la langue de la session :
   il n'est en anglais que dans une session anglaise, comme la session live ;

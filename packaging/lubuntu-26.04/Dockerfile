@@ -8,9 +8,10 @@ ENV DEBIAN_FRONTEND=noninteractive \
     QT_QPA_PLATFORM=offscreen \
     SIGILDESK_PYTHON=/usr/bin/python3
 
-# VLC est un paquet de l'ASUS (tuile Vidéos), inutile pour les tests : exclu.
+# Seule la liste commune : VLC et le pilote VA-API (scripts/apt-packages-asus.txt)
+# sont propres à l'ASUS, inutiles sans écran ni carte graphique.
 COPY scripts/apt-packages.txt /tmp/apt-packages.txt
 RUN apt-get update \
- && apt-get install -y --no-install-recommends python3 xdg-utils fonts-noto-core $(grep -v '^vlc$' /tmp/apt-packages.txt) \
+ && apt-get install -y --no-install-recommends python3 xdg-utils fonts-noto-core $(grep -v '^\s*\(#\|$\)' /tmp/apt-packages.txt) \
  && rm -rf /var/lib/apt/lists/* \
- && dpkg-query -W -f='${Package} ${Version}\n' $(grep -v '^vlc$' /tmp/apt-packages.txt) python3 > /etc/sigildesk-paquets.txt
+ && dpkg-query -W -f='${Package} ${Version}\n' $(grep -v '^\s*\(#\|$\)' /tmp/apt-packages.txt) python3 > /etc/sigildesk-paquets.txt

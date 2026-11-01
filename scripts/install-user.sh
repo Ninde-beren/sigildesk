@@ -29,7 +29,7 @@ if ! "$PYTHON" -c 'import PySide6.QtQuick, PySide6.QtQml, PySide6.QtNetwork, PyS
 PySide6 est introuvable pour $PYTHON. Sur Lubuntu 26.04, installez-le une fois
 avec un compte administrateur, puis relancez ce script :
 
-  sudo apt install $(tr '\n' ' ' < "$SRC/scripts/apt-packages.txt")
+  sudo apt install $(grep -hv '^\s*\(#\|$\)' "$SRC/scripts/apt-packages.txt" "$SRC/scripts/apt-packages-asus.txt" | tr '\n' ' ')
 
 (Ou désignez un autre interpréteur : SIGILDESK_PYTHON=/chemin/python3 $0)
 EOF

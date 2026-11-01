@@ -28,6 +28,8 @@ from sigildesk.infra.config_store import ConfigStore
 from sigildesk.infra.launcher import Launcher
 from sigildesk.infra.lxqt import SessionPower, find_shortcut_conflicts, shortcut_files
 from sigildesk.infra.paths import UserPaths, user_config_root
+from sigildesk.infra.processes import find_program
+from sigildesk.infra.video_decoding import check_hardware_decoding
 from sigildesk.infra.window_manager import WindowManager
 from sigildesk.infra.xdg import check_associations, resolve_folder
 from sigildesk.ui.favorites_model import FavoritesModel
@@ -57,7 +59,7 @@ class AppController(QObject):
     minimizeRequested = Signal()
     activateRequested = Signal()
     panelRequested = Signal(str)
-    diagnosticsReady = Signal("QVariantList", "QVariantList")
+    diagnosticsReady = Signal("QVariantList", "QVariantList", "QVariantMap")  # outils, associations, décodage
 
     def __init__(
         self,
@@ -388,7 +390,7 @@ class AppController(QObject):
 
     @Slot()
     def runDiagnostics(self) -> None:
-        """Vérifie outils et associations dans un fil à part : `xdg-mime` est lent.
+        """Vérifie outils, associations et décodage matériel dans un fil à part : `xdg-mime` et `vainfo` sont lents.
 
         Le fil ne touche à aucun objet Qt ; il émet seulement `diagnosticsReady`,
         que Qt met en file d'attente vers le fil de l'interface (connexion
@@ -404,6 +406,7 @@ class AppController(QObject):
                  "fix": r.fix_command}
                 for r in reports
             ]
-            self.diagnosticsReady.emit(tools, associations)
+            decoding = check_hardware_decoding(find_program("vainfo"))
+            self.diagnosticsReady.emit(tools, associations, decoding.as_dict())
 
         threading.Thread(target=work, name="diagnostic", daemon=True).start()

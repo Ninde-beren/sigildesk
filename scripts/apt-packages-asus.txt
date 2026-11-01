@@ -1,0 +1,11 @@
+# Paquets propres à l'ASUS (session LXQt, écran, puce graphique Intel) :
+# installés par install-system-deps.sh avec apt-packages.txt, exclus du
+# conteneur de test, qui n'a ni écran ni carte graphique.
+# Lecteur vidéo de la tuile Vidéos (Lubuntu le livre, le paquet le garantit).
+vlc
+# Décodage vidéo matériel (VA-API) du Celeron N3060 : sans ce pilote, VLC
+# décode H.264 et HEVC en logiciel et une vidéo 1080p saccade ou se fige.
+# La puce (Cherryview/Braswell) relève du pilote i965, pas d'intel-media-va-driver.
+i965-va-driver
+# Vérification du décodage matériel (diagnostic et Paramètres › Applications).
+vainfo
