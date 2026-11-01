@@ -1,0 +1,30 @@
+# Les mêmes tests que ./run-tests.sh, sur Ubuntu avec PySide6 depuis PyPI (rendu hors écran).
+# Le conteneur Lubuntu 26.04 (scripts/test-lubuntu.sh) reste la référence pour la cible réelle.
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Bibliothèques système de Qt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libegl1 libgl1 libxkbcommon0 libdbus-1-3 libfontconfig1 libglib2.0-0 fonts-noto-core xdg-utils
+      - name: Dépendances Python
+        run: pip install -r requirements-dev.txt ruff
+      - name: Lint
+        run: ruff check sigildesk tests scripts
+      - name: Tests
+        run: ./run-tests.sh
