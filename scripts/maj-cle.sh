@@ -2,7 +2,7 @@
 # Met à jour la clé USB d'installation (poste de développement) et vérifie la copie.
 #   scripts/maj-cle.sh [/media/antoine/BONIFACI]
 #   scripts/maj-cle.sh --attendre          # attend que la clé soit branchée (10 h au plus)
-# Contenu écrit dans <clé>/SigilDesk/ : sigildesk-app/ (sans .venv ni build),
+# Contenu écrit dans <clé>/SigilDesk/ : sigildesk-app/ (sans .git, .venv, build ni caches),
 # installer.sh, LISEZ-MOI.txt et essais/. Le reste de la clé n'est pas touché.
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -31,7 +31,7 @@ dest="$cle/SigilDesk"
 mkdir -p "$dest/essais"
 rm -rf "$dest/sigildesk-app.nouveau"
 mkdir -p "$dest/sigildesk-app.nouveau"
-(cd "$here" && tar --exclude=./.venv --exclude=./build --exclude='__pycache__' --exclude='*.pyc' -cf - .) \
+(cd "$here" && tar --exclude=./.git --exclude=./.venv --exclude=./build --exclude=./.ruff_cache --exclude='__pycache__' --exclude='*.pyc' -cf - .) \
     | tar -xf - -C "$dest/sigildesk-app.nouveau" --no-same-owner
 rm -rf "$dest/sigildesk-app"
 mv "$dest/sigildesk-app.nouveau" "$dest/sigildesk-app"
@@ -42,7 +42,7 @@ sync
 
 # Vérification fichier par fichier.
 sommes="$(mktemp)"
-(cd "$here" && find . -path ./.venv -prune -o -path ./build -prune -o -name __pycache__ -prune -o -type f ! -name '*.pyc' -print0 \
+(cd "$here" && find . -path ./.git -prune -o -path ./.venv -prune -o -path ./build -prune -o -path ./.ruff_cache -prune -o -name __pycache__ -prune -o -type f ! -name '*.pyc' -print0 \
     | sort -z | xargs -0 sha256sum) > "$sommes"
 (cd "$dest/sigildesk-app" && sha256sum -c --quiet "$sommes")
 cmp -s "$here/scripts/installer-cle.sh" "$dest/installer.sh"
