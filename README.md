@@ -134,7 +134,7 @@ scripts/check-deps.sh
 uv venv .venv && uv pip install --python .venv/bin/python -r requirements-dev.txt
 ./run.sh --windowed --size 1366x768
 ./run.sh --windowed --size 1024x600 --root /tmp/essai-sigildesk   # réglages jetables
-./run-tests.sh                                                     # 172 tests, ~25 s
+./run-tests.sh                                                     # 178 tests, ~25 s
 .venv/bin/ruff check sigildesk tests scripts                       # lint (config dans pyproject.toml)
 ```
 
@@ -235,15 +235,16 @@ récente n'est jamais écrasé. Aucune donnée sensible n'y figure.
 | `browser` | `auto` (Chromium si présent), `chromium`, `firefox`, `systeme` |
 | `web.internet`, `web.facebook`, `web.youtube` | adresses des tuiles web |
 | `web.mail` | `{"provider": "orange", "url": ""}`, ou `"autre"` avec une adresse |
-| `folders.files/photos/videos/pdf` | `home`, `documents`, `downloads`, `pictures`, `videos`… |
+| `folders.files/photos/videos/pdf` | `home`, `documents`, `downloads`, `pictures`, `videos`…, ou le chemin absolu d'un dossier (clé USB, disque externe) choisi dans *Paramètres › Dossiers* |
 | `appearance.comfort`, `appearance.wallpaper`, `appearance.show_labels` | mode confort, fond choisi, noms sous les icônes |
 | `favorites` | jusqu'à 12 `{name, url, icon}` |
 | `maintenance.shortcut` | raccourci de maintenance, deux modificateurs parmi Ctrl, Alt, Meta |
 | `window.mode` | `plein-ecran` ou `fenetre` |
 | `weather.enabled`, `weather.city` | météo affichée, ville choisie (nom, région, pays, latitude, longitude) |
 
-Schéma en version 2 : un fichier de la version 1 est migré automatiquement au
-démarrage (météo et noms sous les icônes ajoutés, activés).
+Schéma en version 3 : un fichier des versions 1 et 2 est migré automatiquement au
+démarrage (v2, 2026-10-28 : météo et noms sous les icônes ajoutés, activés ;
+v3, 2026-11-01 : les dossiers acceptent un chemin absolu, le contenu ne change pas).
 
 **Icônes personnalisées** : déposer `internet.svg` (ou `.png`), `mail.svg`, etc.
 dans `~/.local/share/sigildesk/icons/`. Les noms sont ceux de

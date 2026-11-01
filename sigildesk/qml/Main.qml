@@ -58,7 +58,7 @@ Window {
         ink: root.ink
         inkMuted: root.inkMuted
         onDark: root.onDark
-        onWeatherClicked: settingsPanel.openSection(2)
+        onWeatherClicked: settingsPanel.openSectionNamed("meteo")
     }
 
     Greeting {
@@ -87,7 +87,7 @@ Window {
         anchors.horizontalCenter: parent.horizontalCenter
         y: parent.height - root.marginV - height
         onFavorites: favoritesPanel.open()
-        onSettings: settingsPanel.openSection(0)
+        onSettings: settingsPanel.openSectionNamed("affichage")
         onPower: root.askPowerOff()
     }
 
@@ -204,7 +204,7 @@ Window {
         message: "Indiquez une fois pour toutes le site de votre messagerie (Gmail, Orange, Free…). Le bouton Mails l'ouvrira ensuite directement."
         confirmText: "Choisir ma messagerie"
         cancelText: "Plus tard"
-        onAccepted: settingsPanel.openSection(1)
+        onAccepted: settingsPanel.openSectionNamed("messagerie")
     }
 
     // --- Comportements ----------------------------------------------------------
@@ -258,14 +258,15 @@ Window {
         function onActivateRequested() { root.restore() }
         function onPanelRequested(name) {
             if (name === "favoris") favoritesPanel.open()
-            else if (name === "parametres") settingsPanel.openSection(0)
+            else if (name === "parametres") settingsPanel.openSectionNamed("affichage")
             else if (name === "fonds") wallpaperSheet.open()
             else if (name === "eteindre") root.askPowerOff()
             else if (name === "editeur") favoriteEditor.openFor(-1)
-            else if (name === "meteo") settingsPanel.openSection(2)
-            else if (name === "apropos") settingsPanel.openSection(5)
+            else if (name === "dossiers") settingsPanel.openSectionNamed("dossiers")
+            else if (name === "meteo") settingsPanel.openSectionNamed("meteo")
+            else if (name === "apropos") settingsPanel.openSectionNamed("apropos")
             else if (name === "redemarrer") rebootDialog.open()
-            else if (name === "maintenance") settingsPanel.openSection(4)
+            else if (name === "maintenance") settingsPanel.openSectionNamed("maintenance")
         }
     }
 

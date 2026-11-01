@@ -16,13 +16,15 @@ from __future__ import annotations
 
 import copy
 import re
+from pathlib import PurePosixPath
 from typing import Any
 
 from sigildesk.domain import catalog
 from sigildesk.domain.shortcuts import ShortcutError, validate_shortcut
 from sigildesk.domain.urls import UrlError, normalize_web_url
 
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
+MAX_FOLDER_PATH = 1024
 BROWSERS = ("auto", "chromium", "firefox", "systeme")
 WINDOW_MODES = ("plein-ecran", "fenetre")
 _WALLPAPER_ID = re.compile(r"^[a-z0-9][a-z0-9._-]{0,63}$")
@@ -116,6 +118,23 @@ def _weather(value: Any, path: str) -> dict:
     return {"enabled": _bool(doc["enabled"], f"{path}.enabled"), "city": city}
 
 
+def _folder(value: Any, path: str) -> str:
+    """Clé de `catalog.FOLDER_KEYS`, ou chemin absolu normalisé (sans « .. »).
+
+    L'existence du dossier n'est pas vérifiée ici : une clé USB peut être
+    débranchée. C'est `infra.xdg.resolve_folder` qui s'en charge à l'ouverture.
+    """
+    if isinstance(value, str) and value in catalog.FOLDER_KEYS:
+        return value
+    text = _text(value, path, MAX_FOLDER_PATH, allow_empty=False)
+    if not catalog.is_folder_path(text):
+        raise ConfigError(f"{path} : dossier connu ({', '.join(catalog.FOLDER_KEYS)}) ou chemin absolu attendu")
+    normalized = PurePosixPath(text)  # réduit « // », « /./ » et la barre finale, garde « .. »
+    if ".." in normalized.parts:
+        raise ConfigError(f"{path} : « .. » interdit dans un chemin")
+    return str(normalized)
+
+
 def _favorite(value: Any, path: str) -> dict:
     doc = _object(value, path, ("name", "url", "icon"))
     return {
@@ -169,8 +188,7 @@ def validate(document: Any) -> dict:
             "mail": _mail(web["mail"], "web.mail"),
             "youtube": _url(web["youtube"], "web.youtube"),
         },
-        "folders": {key: _choice(folders[key], f"folders.{key}", catalog.FOLDER_KEYS)
-                    for key in catalog.LOCAL_TILE_IDS},
+        "folders": {key: _folder(folders[key], f"folders.{key}") for key in catalog.LOCAL_TILE_IDS},
         "appearance": {
             "comfort": _bool(appearance["comfort"], "appearance.comfort"),
             "wallpaper": wallpaper,
@@ -193,8 +211,15 @@ def _v1_to_v2(doc: dict) -> dict:
     return doc
 
 
+def _v2_to_v3(doc: dict) -> dict:
+    # v3 (2026-11-01) : `folders.*` accepte un chemin absolu en plus des clés XDG.
+    # Aucune clé ne change ; le numéro monte pour qu'un SigilDesk plus ancien, qui
+    # refuserait un chemin, laisse ce fichier en lecture seule au lieu de l'écarter.
+    return doc
+
+
 # version de départ → fonction qui produit la version suivante
-MIGRATIONS = {1: _v1_to_v2}
+MIGRATIONS = {1: _v1_to_v2, 2: _v2_to_v3}
 
 
 def migrate(document: Any) -> Any:

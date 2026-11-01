@@ -1,6 +1,9 @@
-// Paramètres : affichage (mode confort, fond, prénom), messagerie, météo,
-// applications, maintenance, à propos. Chaque réglage s'applique et s'enregistre aussitôt.
+// Paramètres : affichage (mode confort, fond, prénom), messagerie, dossiers des
+// tuiles locales, météo, applications, maintenance, à propos. Chaque réglage
+// s'applique et s'enregistre aussitôt. Les sections se désignent par leur nom
+// (`openSectionNamed`), jamais par un numéro.
 import QtQuick
+import QtQuick.Dialogs
 import QtQuick.Templates as T
 
 PanelFrame {
@@ -16,12 +19,18 @@ PanelFrame {
     signal minimizeRequested()
     signal quitRequested()
 
-    readonly property var sections: ["Affichage", "Messagerie", "Météo", "Applications", "Maintenance", "À propos"]
+    readonly property var sections: ["Affichage", "Messagerie", "Dossiers", "Météo", "Applications", "Maintenance", "À propos"]
+    readonly property var sectionIds: ["affichage", "messagerie", "dossiers", "meteo", "applications", "maintenance", "apropos"]
+    readonly property string current: sectionIds[section]
 
     function openSection(index) {
         section = index
         open()
         Qt.callLater(function() { navRepeater.itemAt(index).forceActiveFocus() })
+    }
+
+    function openSectionNamed(name) {
+        openSection(Math.max(0, sectionIds.indexOf(name)))
     }
 
     Connections {
@@ -91,14 +100,14 @@ PanelFrame {
         Item {
             id: pages
             width: page.width
-            height: [affichage, messagerie, meteo, applications, maintenance, apropos][panel.section].height
+            height: [affichage, messagerie, dossiers, meteo, applications, maintenance, apropos][panel.section].height
 
             // Affichage -------------------------------------------------------
             Column {
                 id: affichage
                 width: parent.width
                 spacing: 20
-                visible: panel.section === 0
+                visible: panel.current === "affichage"
 
                 SettingCard {
                     title: "Mode confort"
@@ -189,7 +198,7 @@ PanelFrame {
                 id: messagerie
                 width: parent.width
                 spacing: 6
-                visible: panel.section === 1
+                visible: panel.current === "messagerie"
                 property string choice: app.mailProvider
 
                 Text {
@@ -241,12 +250,92 @@ PanelFrame {
                 }
             }
 
+            // Dossiers ---------------------------------------------------------------
+            // Le dossier qu'ouvre chaque tuile locale : un dossier habituel (clé XDG)
+            // ou un chemin choisi avec le sélecteur ; `app.folderSettings` donne tout.
+            Column {
+                id: dossiers
+                width: parent.width
+                spacing: 20
+                visible: panel.current === "dossiers"
+                property string statusTile: ""
+                property string status: ""
+
+                Text {
+                    width: parent.width
+                    wrapMode: Text.WordWrap
+                    text: "Le dossier qu'ouvre chaque tuile du bas de l'accueil : un dossier de l'ordinateur, "
+                        + "une clé USB ou un disque externe. S'il est débranché, le dossier personnel s'ouvre à sa place."
+                    font.pixelSize: theme.fontBody
+                    color: theme.mutedColor
+                }
+
+                FolderDialog {
+                    id: folderPicker
+                    property string tileId: ""
+                    onAccepted: {
+                        dossiers.statusTile = tileId
+                        dossiers.status = app.setFolderFromUrl(tileId, selectedFolder.toString()) || "Dossier enregistré."
+                    }
+                }
+
+                Repeater {
+                    model: app.folderSettings
+                    delegate: SettingCard {
+                        required property var modelData
+                        title: modelData.label
+                        description: modelData.found ? "Dossier actuel :"
+                                                     : "Dossier introuvable (le dossier personnel s'ouvre à sa place) :"
+                        Column {
+                            width: parent.width
+                            spacing: 10
+                            Text {
+                                width: parent.width
+                                wrapMode: Text.WrapAnywhere
+                                text: modelData.custom ? modelData.setting : modelData.path
+                                font.pixelSize: theme.fontBody
+                                font.weight: Font.DemiBold
+                                color: modelData.found ? theme.textColor : theme.danger
+                            }
+                            Row {
+                                spacing: 12
+                                SdButton {
+                                    text: "Choisir un dossier…"
+                                    Accessible.description: "Choisir le dossier qu'ouvre la tuile " + modelData.label
+                                    onClicked: {
+                                        folderPicker.tileId = modelData.id
+                                        folderPicker.title = "Dossier pour « " + modelData.label + " »"
+                                        folderPicker.currentFolder = app.folderUrl(modelData.id)
+                                        folderPicker.open()
+                                    }
+                                }
+                                SdButton {
+                                    visible: modelData.custom
+                                    text: "Revenir à « " + modelData.defaultLabel + " »"
+                                    onClicked: {
+                                        dossiers.statusTile = modelData.id
+                                        dossiers.status = app.resetFolder(modelData.id) || "Dossier habituel rétabli."
+                                    }
+                                }
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    visible: dossiers.statusTile === modelData.id && dossiers.status !== ""
+                                    text: dossiers.status
+                                    font.pixelSize: theme.fontBody
+                                    color: theme.mutedColor
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             // Météo ------------------------------------------------------------------
             Column {
                 id: meteo
                 width: parent.width
                 spacing: 20
-                visible: panel.section === 2
+                visible: panel.current === "meteo"
 
                 SettingCard {
                     title: "Afficher la météo"
@@ -322,7 +411,7 @@ PanelFrame {
                 id: applications
                 width: parent.width
                 spacing: 6
-                visible: panel.section === 3
+                visible: panel.current === "applications"
 
                 Text {
                     text: "Navigateur utilisé"
@@ -389,7 +478,7 @@ PanelFrame {
                 id: maintenance
                 width: parent.width
                 spacing: 16
-                visible: panel.section === 4
+                visible: panel.current === "maintenance"
 
                 Text {
                     width: parent.width
@@ -437,7 +526,7 @@ PanelFrame {
                 id: apropos
                 width: parent.width
                 spacing: 12
-                visible: panel.section === 5
+                visible: panel.current === "apropos"
 
                 Text {
                     text: "SigilDesk · v" + app.version

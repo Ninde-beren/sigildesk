@@ -97,6 +97,10 @@ class FolderTests(unittest.TestCase):
         self.assertEqual(resolve_folder("videos", home, user_dirs), (home, False))
         self.assertFalse((home / "Vidéos").exists())
         self.assertEqual(resolve_folder("home", home, user_dirs), (home, True))
+        # Chemin absolu choisi dans les Paramètres : tel quel s'il existe, sinon le dossier personnel.
+        (home / "Clé").mkdir()
+        self.assertEqual(resolve_folder(str(home / "Clé"), home, user_dirs), (home / "Clé", True))
+        self.assertEqual(resolve_folder(str(home / "Débranchée"), home, user_dirs), (home, False))
 
 
 class LauncherTests(unittest.TestCase):
@@ -166,6 +170,45 @@ class ControllerTests(unittest.TestCase):
     def test_local_tile_opens_folder(self):
         self.controller.openTile("photos")
         self.assertEqual(self.calls[0][0], "/usr/bin/pcmanfm-qt")
+
+    def test_folder_setting_accepts_an_existing_folder(self):
+        from PySide6.QtCore import QUrl
+
+        usb = self.home / "Clé" / "Photos"
+        usb.mkdir(parents=True)
+        self.assertEqual(self.controller.setFolder("photos", str(usb)), "")
+        self.assertEqual(self.controller.openTile("photos"), "ok")
+        self.assertEqual(self.calls, [["/usr/bin/pcmanfm-qt", str(usb)]])
+        row = next(r for r in self.controller.folderSettings if r["id"] == "photos")
+        self.assertEqual((row["setting"], row["path"], row["found"], row["custom"], row["defaultLabel"]),
+                         (str(usb), str(usb), True, True, "Images"))
+        self.assertEqual(QUrl(self.controller.folderUrl("photos")).toLocalFile(), str(usb))
+        self.assertEqual(self.controller.resetFolder("photos"), "")
+        self.assertEqual(self.store.data["folders"]["photos"], "pictures")
+
+    def test_folder_from_picker_url(self):
+        chosen = self.home / "Vidéos de famille"
+        chosen.mkdir()
+        self.assertEqual(self.controller.setFolderFromUrl("videos", chosen.as_uri()), "")
+        self.assertEqual(self.store.data["folders"]["videos"], str(chosen))
+
+    def test_folder_setting_refusals(self):
+        missing = self.home / "Nulle-part"
+        self.assertEqual(self.controller.setFolder("photos", str(missing)), "Ce dossier est introuvable.")
+        self.assertEqual(self.controller.setFolder("photos", "Images"), "Ce réglage n'est pas valide.")
+        self.assertEqual(self.controller.setFolder("internet", str(self.home)), "Tuile inconnue.")
+        self.assertEqual(self.controller.setFolderFromUrl("photos", "https://exemple.fr/"),
+                         "Ce dossier n'est pas sur cet ordinateur.")
+        self.assertEqual(self.store.data["folders"]["photos"], "pictures")
+
+    def test_unplugged_folder_falls_back_to_home(self):
+        usb = self.home / "Clé"
+        usb.mkdir()
+        self.assertEqual(self.controller.setFolder("files", str(usb)), "")
+        usb.rmdir()
+        self.assertEqual(self.controller.openTile("files"), "ok")
+        self.assertEqual(self.calls, [["/usr/bin/pcmanfm-qt", str(self.home)]])
+        self.assertIn(str(usb), self.toasts[-1])
 
     def test_double_click_does_not_open_twice(self):
         self.assertEqual(self.controller.openTile("internet"), "ok")

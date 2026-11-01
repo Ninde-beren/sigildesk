@@ -7,7 +7,10 @@ from pathlib import Path
 
 from sigildesk import APP_NAME, __version__
 
-PANELS = ("favoris", "parametres", "fonds", "eteindre", "editeur", "meteo", "apropos", "redemarrer", "maintenance")
+PANELS = (
+    "favoris", "parametres", "dossiers", "fonds", "eteindre", "editeur", "meteo", "apropos", "redemarrer",
+    "maintenance",
+)
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:

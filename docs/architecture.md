@@ -112,8 +112,9 @@ PySide6 6.10 de la distribution, celui de l'ASUS : Qt 6.10 refuse des choses que
 **Une tuile.** Ajouter un `TileSpec` dans `domain/catalog.py` et son icône dans
 `resources/icons/`. Une tuile web a son adresse dans `web` du schéma
 (`domain/settings.py` + `config/default.json`, donc `SCHEMA_VERSION` + 1 et une
-migration) ; une tuile locale, son dossier dans `folders`. Le QML n'a rien à
-savoir : il affiche le modèle.
+migration) ; une tuile locale, son dossier dans `folders` (clé XDG ou chemin
+absolu, réglable dans *Paramètres › Dossiers*). Le QML n'a rien à savoir : il
+affiche le modèle.
 
 **Un réglage.** Clé dans `config/default.json`, validation dans
 `domain/settings.py`, `SCHEMA_VERSION` + 1, migration dans `MIGRATIONS`,

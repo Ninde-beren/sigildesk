@@ -2,8 +2,9 @@
 
 - Dossiers : `~/.config/user-dirs.dirs` (format imposé par xdg-user-dirs) donne
   l'emplacement de Documents, Images, Vidéos… en français ou en anglais. Un
-  dossier absent n'est jamais créé : on se rabat sur le dossier personnel et
-  l'interface le signale.
+  réglage peut aussi être un chemin absolu choisi dans les Paramètres (clé USB,
+  second disque). Un dossier absent n'est jamais créé : on se rabat sur le
+  dossier personnel et l'interface le signale.
 - Associations MIME : lecture seule, par `xdg-mime query default`. SigilDesk ne
   réimplémente ni lecteur vidéo, ni rendu PDF, ni galerie ; un double-clic dans
   l'explorateur ouvre l'application associée. Ce module vérifie que ces
@@ -18,6 +19,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+from sigildesk.domain import catalog
 from sigildesk.infra.processes import run_capture
 
 # --- Dossiers de l'utilisateur -------------------------------------------------------
@@ -49,11 +51,18 @@ def parse_user_dirs(text: str, home: Path) -> dict[str, Path]:
     return dirs
 
 
-def resolve_folder(key: str, home: Path, user_dirs_file: Path) -> tuple[Path, bool]:
-    """Chemin du dossier `key` et indicateur « trouvé » (sinon : dossier personnel)."""
-    if key == "home":
+def resolve_folder(setting: str, home: Path, user_dirs_file: Path) -> tuple[Path, bool]:
+    """Dossier désigné par un réglage `folders.*` et indicateur « trouvé ».
+
+    `setting` est une clé de `catalog.FOLDER_KEYS` ou un chemin absolu (déjà
+    validé par `domain.settings`). Introuvable : le dossier personnel, et `False`.
+    """
+    if catalog.is_folder_path(setting):
+        chosen = Path(setting)
+        return (chosen, True) if chosen.is_dir() else (home, False)
+    if setting == "home":
         return home, True
-    variable, fallbacks = _XDG_KEYS[key]
+    variable, fallbacks = _XDG_KEYS[setting]
     try:
         configured = parse_user_dirs(user_dirs_file.read_text(encoding="utf-8"), home).get(variable)
     except OSError:

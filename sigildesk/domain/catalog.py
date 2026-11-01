@@ -67,7 +67,9 @@ def mail_provider(provider_id: str) -> MailProvider | None:
     return next((p for p in MAIL_PROVIDERS if p.id == provider_id), None)
 
 
-# Dossiers que les tuiles locales peuvent ouvrir (clés des dossiers XDG).
+# Dossiers que les tuiles locales peuvent ouvrir : une clé des dossiers XDG
+# (résolue par `infra.xdg`), ou un chemin absolu choisi dans les Paramètres
+# (`folders.photos = "/media/marie/Photos"`). Une clé ne commence jamais par « / ».
 FOLDER_KEYS = ("home", "desktop", "documents", "downloads", "pictures", "videos", "music")
 FOLDER_LABELS = {
     "home": "Dossier personnel",
@@ -80,6 +82,18 @@ FOLDER_LABELS = {
 }
 
 # Pictogrammes livrés pour les favoris ; aucun favicon n'est téléchargé.
+
+
+def is_folder_path(setting: str) -> bool:
+    """Vrai si le réglage de dossier est un chemin absolu plutôt qu'une clé XDG."""
+    return setting.startswith("/")
+
+
+def folder_label(setting: str) -> str:
+    """Nom à afficher : libellé de la clé XDG, ou le chemin lui-même."""
+    return FOLDER_LABELS.get(setting, setting)
+
+
 FAVORITE_ICONS: tuple[tuple[str, str], ...] = (
     ("fav-etoile", "Étoile"),
     ("fav-actualites", "Actualités"),

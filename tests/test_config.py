@@ -37,7 +37,9 @@ class ValidateTests(unittest.TestCase):
             (("schema_version",), "1"),
             (("browser",), "/usr/bin/evil"),
             (("window", "mode"), "kiosque"),
-            (("folders", "photos"), "/etc"),
+            (("folders", "photos"), "Images"),  # relatif
+            (("folders", "photos"), "/photos/../etc"),
+            (("folders", "photos"), 3),
         ]
         for path, value in cases:
             doc = copy.deepcopy(self.doc)
@@ -82,6 +84,12 @@ class ValidateTests(unittest.TestCase):
             doc["weather"]["city"][field] = bad
             with self.subTest(field=field, bad=bad), self.assertRaises(ConfigError):
                 validate(doc)
+
+    def test_folder_is_a_known_key_or_an_absolute_path(self):
+        self.doc["folders"]["photos"] = "/media/marie/Photos//vacances/./"
+        self.assertEqual(validate(self.doc)["folders"]["photos"], "/media/marie/Photos/vacances")
+        self.doc["folders"]["videos"] = "videos"
+        self.assertEqual(validate(self.doc)["folders"]["videos"], "videos")
 
     def test_wallpaper_id_cannot_be_a_path(self):
         self.doc["appearance"]["wallpaper"] = "../../etc/passwd"
@@ -137,6 +145,15 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(store.data["user_name"], "Marie")
         again = ConfigStore(store.path, DEFAULT_CONFIG)
         self.assertEqual(again.load().status, "migrated")
+
+    def test_version_2_is_migrated_unchanged(self):
+        # v3 n'ajoute aucune clé : seul le numéro monte (les dossiers acceptent un chemin).
+        doc = support.default_document()
+        doc["schema_version"] = 2
+        store, _ = support.make_store(self, doc)
+        self.assertEqual(store.data["schema_version"], SCHEMA_VERSION)
+        self.assertEqual(store.data["folders"], validate(support.default_document())["folders"])
+        self.assertEqual(ConfigStore(store.path, DEFAULT_CONFIG).load().status, "migrated")
 
     def test_future_version_is_never_overwritten(self):
         doc = support.default_document()

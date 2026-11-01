@@ -39,6 +39,7 @@ clavier. Cocher au fur et à mesure ; noter toute lenteur ou hésitation.
 - [ ] Vidéos ouvre le dossier Vidéos ; double-clic sur `video-720p.mp4` → VLC (ou mpv), image et son fluides en plein écran.
 - [ ] PDF ouvre le dossier Documents ; double-clic sur `document.pdf` → qpdfview, pages lisibles, défilement correct.
 - [ ] Clé USB branchée : visible dans PCManFM-Qt ; les fichiers s'y ouvrent comme ci-dessus.
+- [ ] Paramètres › Dossiers › Photos › Choisir un dossier… : un dossier de la clé ; la tuile Photos l'ouvre. Clé débranchée : la page dit « introuvable », la tuile ouvre le dossier personnel avec un message ; Revenir à « Images » rétablit.
 - [ ] Paramètres › Applications › Vérifier : tout est coché, sinon appliquer la commande conseillée affichée.
 
 ## Fond d'écran

@@ -11,6 +11,10 @@ un fichier pour l'ouvrir.
 **Une clé USB** : branchez-la, cliquez sur *Fichiers* ; elle apparaît dans la
 colonne de gauche.
 
+**Une tuile qui ouvre un autre dossier** (vos photos sur une clé USB, par
+exemple) : *Paramètres* › *Dossiers* › *Choisir un dossier…*. Le bouton
+*Revenir à…* rétablit le dossier habituel.
+
 **Vos sites préférés** : bouton *Mes favoris*, en bas. *Ajouter* pour en
 garder un nouveau.
 

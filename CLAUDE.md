@@ -28,9 +28,11 @@ Le cahier des charges est dans `../docs/`. Les documents livrés à l'utilisateu
   Jamais de shell.
 - Toute adresse passe par `domain.urls.normalize_web_url` (http/https uniquement).
 - La configuration est un schéma fermé (`domain.settings.validate`) : une
-  nouvelle clé impose d'incrémenter `SCHEMA_VERSION` et d'écrire la migration
-  dans `MIGRATIONS` (version 2 depuis le 2026-10-28 : météo, noms sous les
-  icônes). Le fichier lui-même est l'affaire de `infra.config_store`.
+  nouvelle clé, ou un élargissement des valeurs acceptées, impose d'incrémenter
+  `SCHEMA_VERSION` et d'écrire la migration dans `MIGRATIONS` (version 3 depuis
+  le 2026-11-01 : `folders.*` accepte un chemin absolu ; v2 du 2026-10-28 :
+  météo, noms sous les icônes). Le fichier lui-même est l'affaire de
+  `infra.config_store`.
 - Météo : métier (`domain/weather.py`), fournisseur (`infra/open_meteo.py`),
   cache (`infra/weather_cache.py`), service Qt (`ui/weather_service.py`), QML
   (`WeatherWidget.qml`) restent séparés. Aucune requête réseau dans les tests :

@@ -25,18 +25,9 @@ from sigildesk.infra.wallpaper_store import (
     import_image,
     list_imported,
 )
+from sigildesk.ui.qml_files import url_from_qml
 
 log = logging.getLogger(__name__)
-
-
-def url_from_qml(value: str) -> Path | None:
-    """Chemin local depuis l'URL renvoyée par le sélecteur de fichiers (`file:///…`)."""
-    url = QUrl(value)
-    if url.isLocalFile():
-        return Path(url.toLocalFile())
-    if not url.scheme() and value.startswith("/"):
-        return Path(value)
-    return None
 
 
 class WallpaperModel(QAbstractListModel):

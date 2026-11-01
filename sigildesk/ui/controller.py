@@ -31,6 +31,7 @@ from sigildesk.infra.paths import UserPaths, user_config_root
 from sigildesk.infra.window_manager import WindowManager
 from sigildesk.infra.xdg import check_associations, resolve_folder
 from sigildesk.ui.favorites_model import FavoritesModel
+from sigildesk.ui.qml_files import url_from_qml
 from sigildesk.ui.theme import Theme
 from sigildesk.ui.tiles_model import TilesModel
 
@@ -120,6 +121,29 @@ class AppController(QObject):
     def _user_dirs_file(self) -> Path:
         return user_config_root() / "user-dirs.dirs"
 
+    def _tile_folder(self, tile_id: str) -> tuple[Path, bool, str]:
+        """(dossier à ouvrir, trouvé ?, réglage) d'une tuile locale ; introuvable → dossier personnel."""
+        setting = self._store.data["folders"][tile_id]
+        folder, found = resolve_folder(setting, self._home, self._user_dirs_file())
+        return folder, found, setting
+
+    def _folder_settings(self) -> list[dict]:
+        """Une ligne par tuile locale, pour la page Dossiers des Paramètres."""
+        defaults = self._store.defaults["folders"]
+        rows = []
+        for tile_id in catalog.LOCAL_TILE_IDS:
+            folder, found, setting = self._tile_folder(tile_id)
+            rows.append({
+                "id": tile_id,
+                "label": catalog.tile(tile_id).label,
+                "setting": setting,
+                "path": str(folder),
+                "found": found,
+                "custom": catalog.is_folder_path(setting),
+                "defaultLabel": catalog.folder_label(defaults[tile_id]),
+            })
+        return rows
+
     version = Property(str, lambda self: __version__, constant=True)
     publisher = Property(str, lambda self: PUBLISHER, constant=True)
     author = Property(str, lambda self: AUTHOR, constant=True)
@@ -131,6 +155,7 @@ class AppController(QObject):
     mailUrl = Property(str, lambda self: self._store.data["web"]["mail"]["url"], notify=settingsChanged)
     browser = Property(str, lambda self: self._store.data["browser"], notify=settingsChanged)
     showLabels = Property(bool, lambda self: self._store.data["appearance"]["show_labels"], notify=settingsChanged)
+    folderSettings = Property("QVariantList", lambda self: self._folder_settings(), notify=settingsChanged)
     maintenanceShortcut = Property(str, lambda self: self._store.data["maintenance"]["shortcut"], constant=True)
     shortcutConflicts = Property("QVariantList", lambda self: self._conflicts, constant=True)
     canPowerOff = Property(bool, lambda self: self._session_power is not None, constant=True)
@@ -154,6 +179,14 @@ class AppController(QObject):
         folder, _ = resolve_folder("pictures", self._home, self._user_dirs_file())
         return QUrl.fromLocalFile(str(folder)).toString()
 
+    @Slot(str, result=str)
+    def folderUrl(self, tile_id: str) -> str:
+        """Dossier actuel d'une tuile locale, pour ouvrir le sélecteur de dossier au bon endroit."""
+        if tile_id not in catalog.LOCAL_TILE_IDS:
+            return ""
+        folder, _, _ = self._tile_folder(tile_id)
+        return QUrl.fromLocalFile(str(folder)).toString()
+
     # --- Lancements -------------------------------------------------------------------
 
     def _cooling_down(self, key: str) -> bool:
@@ -164,11 +197,6 @@ class AppController(QObject):
             return True
         self._last_launch[key] = now
         return False
-
-    def _tile_folder(self, tile_id: str) -> tuple[Path, bool, str]:
-        key = self._store.data["folders"][tile_id]
-        folder, found = resolve_folder(key, self._home, self._user_dirs_file())
-        return folder, found, key
 
     def _existing_window(self, tile: catalog.TileSpec) -> OpenWindow | None:
         """Fenêtre déjà ouverte par cette tuile, à ramener plutôt qu'en ouvrir une autre."""
@@ -219,7 +247,7 @@ class AppController(QObject):
                 self.toast.emit(f"Ouverture de {tile.label}…")
             return result
 
-        folder, found, key = self._tile_folder(tile_id)
+        folder, found, setting = self._tile_folder(tile_id)
         result = self._open(tile_id, lambda: self._launcher.open_folder(folder))
         if result == "attente":
             self.toast.emit(f"{tile.label} est en cours d'ouverture, patientez un instant…")
@@ -228,7 +256,7 @@ class AppController(QObject):
                 self.toast.emit(f"Ouverture de {tile.label}…")
             else:
                 self.toast.emit(
-                    f"Dossier « {catalog.FOLDER_LABELS[key]} » introuvable : ouverture du dossier personnel.")
+                    f"Dossier « {catalog.folder_label(setting)} » introuvable : ouverture du dossier personnel.")
         return result
 
     @Slot(int, result=str)
@@ -303,6 +331,31 @@ class AppController(QObject):
         else:
             return "Messagerie inconnue."
         return self._save(lambda doc: doc["web"].__setitem__("mail", mail))
+
+    @Slot(str, str, result=str)
+    def setFolder(self, tile_id: str, setting: str) -> str:
+        """Dossier d'une tuile locale : clé XDG, ou chemin absolu d'un dossier qui existe."""
+        if tile_id not in catalog.LOCAL_TILE_IDS:
+            return "Tuile inconnue."
+        setting = (setting or "").strip()
+        if catalog.is_folder_path(setting) and not resolve_folder(setting, self._home, self._user_dirs_file())[1]:
+            return "Ce dossier est introuvable."
+        return self._save(lambda doc: doc["folders"].__setitem__(tile_id, setting))
+
+    @Slot(str, str, result=str)
+    def setFolderFromUrl(self, tile_id: str, url: str) -> str:
+        """Choix du sélecteur de dossier du QML, reçu en URL `file:///…`."""
+        path = url_from_qml(url)
+        if path is None:
+            return "Ce dossier n'est pas sur cet ordinateur."
+        return self.setFolder(tile_id, str(path))
+
+    @Slot(str, result=str)
+    def resetFolder(self, tile_id: str) -> str:
+        """Revient au dossier habituel de la tuile, celui de `config/default.json`."""
+        if tile_id not in catalog.LOCAL_TILE_IDS:
+            return "Tuile inconnue."
+        return self.setFolder(tile_id, self._store.defaults["folders"][tile_id])
 
     # --- Maintenance et extinction ----------------------------------------------------
 
