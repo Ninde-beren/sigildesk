@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>Sigilys system · C · Monogramme S · symbole blanc monochrome</title>
+  <!-- Proposition de logo du 2026-10-28. Variante blanc pur (#FFFFFF), sans dégradé : pour fond sombre ou photo. Aucun filtre, aucun masque : rendu sûr avec QtSvg (LXQt). -->
+  <g id="symbole">
+    <!-- Les deux bras du S : le voile de l'orbe, deux bras opposés autour du noyau -->
+    <g id="c-bras-forme" fill="#FFFFFF">
+      <path d="M46.542 10.309 A17.752 15.85 0 1 0 23.408 33.27 A8.96 8 0 0 1 26.379 24.77 A8.232 7.35 0 1 1 38.743 15.184 A4.76 4.25 0 0 0 46.542 10.309 Z"/>
+      <path d="M16.541 53.265 A18.872 16.85 0 1 0 40.538 28.573 A8.96 8 0 0 1 37.833 37.073 A9.352 8.35 0 1 1 24.339 48.389 A4.76 4.25 0 0 0 16.541 53.265 Z"/>
+    </g>
+    <!-- Noyau : l'orbe, logé dans le vide au milieu du S -->
+    <circle id="c-noyau-forme" cx="32" cy="31" r="5.2" fill="#FFFFFF"/>
+  </g>
+</svg>

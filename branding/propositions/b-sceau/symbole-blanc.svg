@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>Sigilys system · B · Sceau · symbole blanc monochrome</title>
+  <!-- Proposition de logo du 2026-10-28. Variante blanc pur (#FFFFFF), sans dégradé : pour fond sombre ou photo. Aucun filtre, aucun masque : rendu sûr avec QtSvg (LXQt). -->
+  <g id="symbole">
+    <!-- Sceau : la tuile SigilDesk tournée d'un huitième de tour, évidée autour de l'orbe -->
+    <path id="b-sceau" fill="#FFFFFF" fill-rule="evenodd" d="M26.697 5.303 A7.5 7.5 0 0 1 37.303 5.303 L58.697 26.697 A7.5 7.5 0 0 1 58.697 37.303 L37.303 58.697 A7.5 7.5 0 0 1 26.697 58.697 L5.303 37.303 A7.5 7.5 0 0 1 5.303 26.697 Z M44 32 A12 12 0 1 0 20 32 A12 12 0 1 0 44 32 Z"/>
+    <!-- Orbe au centre, détaché par un vide -->
+    <circle id="b-orbe" cx="32" cy="32" r="8" fill="#FFFFFF"/>
+  </g>
+</svg>

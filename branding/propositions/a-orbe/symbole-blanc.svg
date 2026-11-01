@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>Sigilys system · A · Orbe · symbole blanc monochrome</title>
+  <!-- Proposition de logo du 2026-10-28. Variante blanc pur (#FFFFFF), sans dégradé : pour fond sombre ou photo. Aucun filtre, aucun masque : rendu sûr avec QtSvg (LXQt). -->
+  <g id="symbole">
+    <!-- Anneau de visée : le cercle de l'interface Sigilys, séparé de la sphère par un vide -->
+    <circle id="a-anneau" cx="32" cy="32" r="28" fill="none" stroke="#FFFFFF" stroke-width="4"/>
+    <!-- Sphère : la lumière vient du cœur, sans direction -->
+    <circle id="a-sphere-forme" cx="32" cy="32" r="19.5" fill="#FFFFFF"/>
+  </g>
+</svg>

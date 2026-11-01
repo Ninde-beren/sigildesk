@@ -1,0 +1,48 @@
+[project]
+name = "sigildesk"
+description = "Accueil simplifié façon tablette, posé au-dessus de Lubuntu/LXQt"
+readme = "README.md"
+license = { text = "Propriétaire — tous droits réservés (Sigilbo), usage non commercial uniquement" }
+authors = [{ name = "Antoine OBLIGIS" }]
+requires-python = ">=3.10"
+dynamic = ["version"]
+# Sur Lubuntu : paquets python3-pyside6.* (voir scripts/apt-packages.txt).
+dependencies = ["PySide6-Essentials>=6.5"]
+
+[project.scripts]
+sigildesk = "sigildesk.app:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+version = { attr = "sigildesk.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["sigildesk*"]
+
+[tool.setuptools.package-data]
+sigildesk = ["qml/*.qml", "qml/components/*.qml", "resources/icons/*.svg", "resources/wallpapers/*.jpg"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+extend-exclude = ["branding/propositions", "build", ".venv"]
+
+[tool.ruff.lint]
+# E/W : style, F : erreurs (imports inutiles, noms indéfinis), I : ordre des imports,
+# UP : syntaxe moderne, B : pièges courants (bugbear), SIM : simplifications.
+select = ["E", "W", "F", "I", "UP", "B", "SIM"]
+ignore = [
+    "E731",  # lambdas nommées : voulues pour les Property PySide6
+    "B008",  # `parent: QModelIndex = QModelIndex()` : signature imposée par Qt
+]
+
+[tool.ruff.lint.per-file-ignores]
+"scripts/build-icons.py" = ["E501"]  # tracés SVG sur une ligne
+"tests/*" = ["E501"]
+"tests/support.py" = ["E402"]  # sys.path avant l'import du paquet
+
+[tool.ruff.lint.isort]
+known-first-party = ["sigildesk"]

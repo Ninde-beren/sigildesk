@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=SigilDesk
+Comment=Ouvre l'accueil simplifié à l'ouverture de la session LXQt
+Exec="@LAUNCHER@" --autostart
+Icon=sigildesk
+Terminal=false
+OnlyShowIn=LXQt;
+X-SigilDesk-Managed=true

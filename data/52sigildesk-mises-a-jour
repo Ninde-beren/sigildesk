@@ -1,0 +1,16 @@
+// SigilDesk : mises à jour automatiques complètes.
+// Posé par scripts/install-system-deps.sh, retiré par scripts/disable-auto-updates.sh.
+// Lubuntu applique déjà seul les mises à jour de sécurité ; ce fichier y ajoute
+// les mises à jour courantes et le ménage des anciens noyaux. Jamais de
+// redémarrage automatique : SigilDesk le propose, la personne choisit le moment.
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Download-Upgradeable-Packages "1";
+APT::Periodic::Unattended-Upgrade "1";
+APT::Periodic::AutocleanInterval "7";
+Unattended-Upgrade::Allowed-Origins {
+        "${distro_id}:${distro_codename}-security";
+        "${distro_id}:${distro_codename}-updates";
+};
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+Unattended-Upgrade::Automatic-Reboot "false";

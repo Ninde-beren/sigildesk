@@ -1,0 +1,21 @@
+SigilDesk
+Copyright © 2026 Sigilbo — Antoine OBLIGIS. Tous droits réservés.
+https://sigilbo.fr/
+
+Ce logiciel, son code source, ses icônes et ses fonds d'écran sont la
+propriété de Sigilbo. Aucune licence de copie, de modification ou de
+distribution n'est accordée sans l'accord écrit de Sigilbo.
+
+Usage non commercial uniquement : SigilDesk ne peut être vendu, loué,
+intégré à une offre payante ni utilisé dans un cadre commercial.
+
+Composants tiers, non couverts par ce qui précède
+--------------------------------------------------
+- Qt 6 et PySide6 (The Qt Company), sous licence LGPL v3, utilisés tels que
+  fournis par la distribution (paquets python3-pyside6.*), sans modification.
+- Les logos Facebook et YouTube sont des marques de Meta Platforms, Inc. et
+  de Google LLC. Ils servent uniquement à désigner l'accès à ces services.
+- Données météo : Open-Meteo.com, sous licence CC BY 4.0
+  (https://open-meteo.com/en/licence). L'API gratuite d'Open-Meteo est
+  réservée à un usage non commercial, ce qui est le cas de SigilDesk ;
+  voir README.md, section « Météo ».

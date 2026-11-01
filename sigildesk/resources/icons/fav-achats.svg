@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- SigilDesk : icône « fav-achats », générée par scripts/build-icons.py -->
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB582"/><stop offset="1" stop-color="#EC7642"/></linearGradient></defs>
+  <rect width="64" height="64" rx="18" fill="url(#g)"/>
+  <rect x=".5" y=".5" width="63" height="63" rx="17.5" fill="none" stroke="#fff" stroke-opacity=".25"/>
+  <g fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 25h25l-2 19.3c-.2 1.8-1.7 3.2-3.5 3.2H25c-1.8 0-3.3-1.4-3.5-3.2z"/><path d="M26.5 29v-6a5.5 5.5 0 0 1 11 0v6"/></g>
+</svg>

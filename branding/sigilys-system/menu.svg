@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>Sigilys system · B · Sceau · symbole couleur</title>
+  <!-- Proposition de logo du 2026-10-28. Palette SigilDesk : brume #6C93C8 / #B4CFEC, crème #F4EFE5. Pensé d'abord pour fond sombre (panneau #2E3440). Aucun filtre, aucun masque : rendu sûr avec QtSvg (LXQt). -->
+  <defs>
+    <linearGradient id="b-tuile" x1="32" y1="3" x2="32" y2="61" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#B4CFEC"/>
+      <stop offset="1" stop-color="#6C93C8"/>
+    </linearGradient>
+  </defs>
+  <g id="symbole">
+    <!-- Sceau : la tuile SigilDesk (même dégradé) tournée d'un huitième de tour -->
+    <path id="b-sceau" fill="url(#b-tuile)" d="M26.697 5.303 A7.5 7.5 0 0 1 37.303 5.303 L58.697 26.697 A7.5 7.5 0 0 1 58.697 37.303 L37.303 58.697 A7.5 7.5 0 0 1 26.697 58.697 L5.303 37.303 A7.5 7.5 0 0 1 5.303 26.697 Z"/>
+    <!-- Liseré intérieur, comme les icônes SigilDesk -->
+    <path d="M27.05 5.657 A7 7 0 0 1 36.95 5.657 L58.343 27.05 A7 7 0 0 1 58.343 36.95 L36.95 58.343 A7 7 0 0 1 27.05 58.343 L5.657 36.95 A7 7 0 0 1 5.657 27.05 Z" fill="none" stroke="#FFFFFF" stroke-opacity=".25" stroke-width="1"/>
+    <!-- Halo puis orbe : la lumière de Sigilys au cœur du sceau -->
+    <circle cx="32" cy="32" r="12.5" fill="#F4EFE5" fill-opacity=".35"/>
+    <circle id="b-orbe" cx="32" cy="32" r="8" fill="#F4EFE5"/>
+  </g>
+</svg>

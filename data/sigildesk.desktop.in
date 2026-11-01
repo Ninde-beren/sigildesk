@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=SigilDesk
+GenericName=Accueil simplifié
+Comment=Revenir à l'accueil simplifié : Internet, mails, photos, vidéos
+Exec="@LAUNCHER@"
+Icon=sigildesk
+Terminal=false
+Categories=Utility;
+StartupNotify=false
+X-SigilDesk-Managed=true

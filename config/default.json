@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "user_name": "",
+  "browser": "auto",
+  "web": {
+    "internet": "https://www.google.fr/",
+    "facebook": "https://www.facebook.com/",
+    "mail": {
+      "provider": "",
+      "url": ""
+    },
+    "youtube": "https://www.youtube.com/"
+  },
+  "folders": {
+    "files": "home",
+    "photos": "pictures",
+    "videos": "videos",
+    "pdf": "documents"
+  },
+  "appearance": {
+    "comfort": false,
+    "wallpaper": "aube",
+    "show_labels": true
+  },
+  "favorites": [
+    {
+      "name": "Météo",
+      "url": "https://meteofrance.com/",
+      "icon": "fav-meteo"
+    },
+    {
+      "name": "Actualités",
+      "url": "https://www.franceinfo.fr/",
+      "icon": "fav-actualites"
+    }
+  ],
+  "maintenance": {
+    "shortcut": "Ctrl+Alt+M"
+  },
+  "window": {
+    "mode": "plein-ecran"
+  },
+  "weather": {
+    "enabled": true,
+    "city": null
+  }
+}

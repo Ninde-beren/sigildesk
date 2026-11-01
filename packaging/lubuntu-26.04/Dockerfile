@@ -1,0 +1,16 @@
+# Environnement de test aligné sur Lubuntu 26.04 : mêmes dépôts Ubuntu
+# « resolute », mêmes paquets PySide6 (6.10) que ceux installés sur l'ASUS.
+# Sert aux tests et aux captures ; il ne remplace pas un essai en session LXQt.
+FROM ubuntu:26.04
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 \
+    QT_QPA_PLATFORM=offscreen \
+    SIGILDESK_PYTHON=/usr/bin/python3
+
+# VLC est un paquet de l'ASUS (tuile Vidéos), inutile pour les tests : exclu.
+COPY scripts/apt-packages.txt /tmp/apt-packages.txt
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends python3 xdg-utils fonts-noto-core $(grep -v '^vlc$' /tmp/apt-packages.txt) \
+ && rm -rf /var/lib/apt/lists/* \
+ && dpkg-query -W -f='${Package} ${Version}\n' $(grep -v '^vlc$' /tmp/apt-packages.txt) python3 > /etc/sigildesk-paquets.txt

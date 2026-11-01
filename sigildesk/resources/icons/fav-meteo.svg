@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- SigilDesk : icône « fav-meteo », générée par scripts/build-icons.py -->
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#86CCF6"/><stop offset="1" stop-color="#3D8FD8"/></linearGradient></defs>
+  <rect width="64" height="64" rx="18" fill="url(#g)"/>
+  <rect x=".5" y=".5" width="63" height="63" rx="17.5" fill="none" stroke="#fff" stroke-opacity=".25"/>
+  <g fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="27" cy="27" r="5"/><path d="M27 17v2.5M17 27h2.5M20 20l1.8 1.8M34 20l-1.8 1.8"/><path d="M27 45h14a6 6 0 0 0 .4-12 8.2 8.2 0 0 0-15.6 3.2A4.4 4.4 0 0 0 27 45z"/></g>
+</svg>

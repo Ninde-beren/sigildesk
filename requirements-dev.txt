@@ -1,0 +1,4 @@
+# Développement hors Lubuntu uniquement. Sur l'ASUS, PySide6 vient des paquets
+# de la distribution (scripts/apt-packages.txt), pas de pip.
+#   uv venv .venv && uv pip install --python .venv/bin/python -r requirements-dev.txt
+PySide6-Essentials>=6.5

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <title>Sigilys system · A · Orbe · symbole couleur</title>
+  <!-- Proposition de logo du 2026-10-28. Palette SigilDesk : brume #6C93C8 / #B4CFEC, crème #F4EFE5. Pensé d'abord pour fond sombre (panneau #2E3440). Aucun filtre, aucun masque : rendu sûr avec QtSvg (LXQt). -->
+  <defs>
+    <radialGradient id="a-sphere" cx="32" cy="32" r="19.5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F4EFE5"/>
+      <stop offset=".45" stop-color="#B4CFEC"/>
+      <stop offset="1" stop-color="#6C93C8"/>
+    </radialGradient>
+  </defs>
+  <g id="symbole">
+    <!-- Anneau de visée : le cercle de l'interface Sigilys, séparé de la sphère par un vide -->
+    <circle id="a-anneau" cx="32" cy="32" r="28" fill="none" stroke="#6C93C8" stroke-width="4"/>
+    <!-- Sphère : la lumière vient du cœur, sans direction -->
+    <circle id="a-sphere-forme" cx="32" cy="32" r="19.5" fill="url(#a-sphere)"/>
+  </g>
+</svg>
