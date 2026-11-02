@@ -183,10 +183,12 @@ def run_gui(args) -> int:
     watcher = None  # gardé en vie jusqu'à la fin de la boucle d'événements
     if args.capture:
         open_windows.refresh()
+        gate = devtools.DiagnosticsGate(controller, parent=app) if args.panel == "verification" else None
         if args.panel:
             QTimer.singleShot(0, lambda: controller.panelRequested.emit(args.panel))
         watcher = devtools.ReadyWatcher(window, weather, lambda: devtools.capture(
-            app, window, args.screenshot, args.dump_geometry), parent=app)  # noqa: F821 (« window » effacé après app.exec)
+            app, window, args.screenshot, args.dump_geometry), parent=app,  # noqa: F821 (« window » effacé après app.exec)
+            extra=gate.ready if gate else None)
     elif args.print_ready:
         watcher = devtools.ReadyWatcher(window, weather, lambda: print(
             f"SIGILDESK_READY ms={int((time.monotonic() - _T0) * 1000)}", flush=True), parent=app)

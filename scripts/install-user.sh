@@ -119,3 +119,4 @@ fi
 
 echo
 echo "Terminé. Pour essayer : menu des applications › Accessoires › SigilDesk, ou la commande « $LAUNCHER »."
+echo "Vérification (rien n'est modifié) : $APP_DIR/scripts/check-deps.sh"

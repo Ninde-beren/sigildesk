@@ -9,3 +9,6 @@ vlc
 i965-va-driver
 # Vérification du décodage matériel (diagnostic et Paramètres › Applications).
 vainfo
+# Vérification du rendu graphique (glxinfo -B : accéléré par la puce, ou logiciel
+# « llvmpipe », auquel cas tout tourne sur le processeur).
+mesa-utils

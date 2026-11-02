@@ -83,11 +83,12 @@ class ReadyWatcher(QObject):
     """
 
     def __init__(self, window, weather, callback: Callable[[], None], max_attempts: int = 200,
-                 parent: QObject | None = None):
+                 parent: QObject | None = None, extra: Callable[[], bool] | None = None):
         super().__init__(parent)
         self._window = window
         self._weather = weather
         self._callback = callback
+        self._extra = extra  # condition supplémentaire (capture de la page Vérifier : rapport reçu)
         self._remaining = max_attempts
         self._timer = QTimer(self)
         self._timer.setSingleShot(True)
@@ -98,7 +99,7 @@ class ReadyWatcher(QObject):
 
     def _settled(self) -> bool:
         return bool(self._window.property("imagesReady")) and self._weather.property("state") != "loading" \
-            and not self._weather.property("searching")
+            and not self._weather.property("searching") and (self._extra is None or self._extra())
 
     def _poll(self) -> None:
         self._remaining -= 1
@@ -108,6 +109,21 @@ class ReadyWatcher(QObject):
             self._timer.start(150)
         else:
             self._timer.start(50)
+
+
+class DiagnosticsGate(QObject):
+    """Vrai une fois `diagnosticsReady` reçu : la capture `--panel verification` attend le rapport."""
+
+    def __init__(self, controller, parent: QObject | None = None):
+        super().__init__(parent)
+        self._done = False
+        controller.diagnosticsReady.connect(self._mark)
+
+    def _mark(self, *_) -> None:
+        self._done = True
+
+    def ready(self) -> bool:
+        return self._done
 
 
 def capture(app, window, screenshot: Path | None, geometry: Path | None) -> None:

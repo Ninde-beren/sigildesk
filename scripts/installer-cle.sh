@@ -4,7 +4,9 @@
 #   bash /run/media/$USER/BONIFACI/SigilDesk/installer.sh
 # Installe directement depuis la clé, sans copie dans le dossier personnel :
 # install-system-deps.sh (récapitulatif, confirmation, mot de passe), puis
-# install-user.sh, qui range l'application dans ~/.local/share/sigildesk/app.
+# install-user.sh, qui range l'application dans ~/.local/share/sigildesk/app,
+# puis le diagnostic (check-deps.sh : applications, matériel et pilotes), qui
+# ne modifie rien et dit ce qu'il reste à regarder.
 # La clé peut ensuite être retirée. SigilDesk s'ouvre ensuite seul à chaque
 # ouverture de session (disable-autostart.sh pour l'en empêcher).
 set -euo pipefail
@@ -20,11 +22,16 @@ if [ ! -f "$app/scripts/install-user.sh" ]; then
     exit 1
 fi
 
-echo "== 1/2 Système : paquets, Chromium, mises à jour automatiques, logo Sigilys"
+echo "== 1/3 Système : paquets, Chromium, mises à jour automatiques, logo Sigilys"
 bash "$app/scripts/install-system-deps.sh"
 
-echo "== 2/2 SigilDesk pour $(id -un)"
+echo "== 2/3 SigilDesk pour $(id -un)"
 bash "$app/scripts/install-user.sh"
+
+echo "== 3/3 Vérification : applications, matériel et pilotes (rien n'est modifié)"
+source "$app/scripts/lib.sh"  # pour APP_DIR : le diagnostic tourne depuis la copie installée
+bash "$APP_DIR/scripts/check-deps.sh" \
+    || echo "(des lignes [MANQUE] ou [!!] ci-dessus demandent un coup d'œil : $cle/sigildesk-app/docs/recuperation.md)"
 
 cat <<EOF
 

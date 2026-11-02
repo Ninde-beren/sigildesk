@@ -21,6 +21,7 @@ clavier. Cocher au fur et à mesure ; noter toute lenteur ou hésitation.
 ## Préparation (par la personne qui installe, une fois)
 
 - [ ] `scripts/install-system-deps.sh` puis `scripts/install-user.sh`.
+- [ ] `installer.sh` (clé) se termine par « 3/3 Vérification » : le diagnostic s'affiche (applications, matériel et pilotes), sans ligne [MANQUE] ; une ligne [!!] est à regarder, la commande conseillée est en bout de ligne.
 - [ ] Ouvrir Chromium une fois, accepter ses conditions d'utilisation et fermer : la personne ne verra pas cette boîte.
 - [ ] Choisir la messagerie et la ville de la météo dans les Paramètres.
 
@@ -37,7 +38,7 @@ clavier. Cocher au fur et à mesure ; noter toute lenteur ou hésitation.
 - [ ] Fichiers ouvre PCManFM-Qt dans le dossier personnel.
 - [ ] Photos ouvre le dossier Images avec des miniatures ; double-clic sur `photo.jpg` → LXImage-Qt.
 - [ ] Vidéos ouvre le dossier Vidéos ; double-clic sur `video-720p.mp4` → VLC (ou mpv), image et son fluides en plein écran.
-- [ ] Paramètres › Applications › Vérifier : « Décodage vidéo matériel : H.264, HEVC… (Intel i965 driver…) ». Une vidéo 1080p de téléphone est fluide dans VLC ; si l'image reste fixe avec le son, VLC › Outils › Préférences › Vidéo › Sortie : « X11 (XCB) », puis relancer VLC.
+- [ ] Paramètres › Applications › Vérifier les applications et le matériel : « décodage vidéo matériel : H.264, HEVC… (Intel i965 driver…) », « rendu graphique : accéléré par la puce (Mesa Intel(R) HD Graphics 400…) », « son : carte(s) … ; sortie : … », appareils PCI et USB pilotés, « micrologiciels : aucun échec », « pilotes additionnels : aucun proposé ». Une vidéo 1080p de téléphone est fluide dans VLC ; si l'image reste fixe avec le son, VLC › Outils › Préférences › Vidéo › Sortie : « X11 (XCB) », puis relancer VLC.
 - [ ] PDF ouvre le dossier Documents ; double-clic sur `document.pdf` → qpdfview, pages lisibles, défilement correct.
 - [ ] Clé USB branchée : visible dans PCManFM-Qt ; les fichiers s'y ouvrent comme ci-dessus.
 - [ ] Paramètres › Dossiers › Photos › Choisir un dossier… : un dossier de la clé ; la tuile Photos l'ouvre. Clé débranchée : la page dit « introuvable », la tuile ouvre le dossier personnel avec un message ; Revenir à « Images » rétablit.

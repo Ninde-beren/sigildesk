@@ -140,6 +140,30 @@ class ControllerTests(unittest.TestCase):
         self.toasts = []
         self.controller.toast.connect(self.toasts.append)
 
+    def test_diagnostics_report_hardware_as_a_list(self):
+        """Le rapport matériel arrive au QML comme une liste de dictionnaires, depuis le fil de travail."""
+        from unittest import mock
+
+        from PySide6.QtCore import QEventLoop, QTimer
+
+        from sigildesk.infra.hardware import Verification
+
+        received = []
+        loop = QEventLoop()
+        self.controller.diagnosticsReady.connect(lambda tools, assoc, hw: (received.append((tools, assoc, hw)), loop.quit()))
+        fake = [Verification("opengl", "rendu graphique", "ok", "accéléré par la puce (Mesa)")]
+        with (mock.patch("sigildesk.ui.controller.collect_hardware_report", return_value=fake),
+              mock.patch("sigildesk.ui.controller.check_associations", return_value=[])):
+            self.controller.runDiagnostics()
+            QTimer.singleShot(5000, loop.quit)
+            loop.exec()
+        self.assertEqual(len(received), 1, "diagnosticsReady non reçu")
+        tools, associations, hardware = received[0]
+        self.assertTrue(any(t["id"] == "chromium" and t["path"] for t in tools))
+        self.assertEqual(associations, [])
+        self.assertEqual(hardware, [{"id": "opengl", "label": "rendu graphique", "status": "ok",
+                                     "detail": "accéléré par la puce (Mesa)", "hint": ""}])
+
     def test_web_tiles(self):
         self.assertEqual(self.controller.openTile("internet"), "ok")
         self.assertEqual(self.controller.openTile("youtube"), "ok")

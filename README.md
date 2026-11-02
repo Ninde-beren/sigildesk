@@ -112,7 +112,8 @@ Il installe :
   machine : **VLC**, le lecteur vidéo attendu par la tuile Vidéos (Lubuntu le
   livre, le paquet le garantit), et **`i965-va-driver`**, le pilote VA-API du
   Celeron N3060, sans lequel VLC décode H.264 et HEVC en logiciel et une vidéo
-  1080p saccade ou se fige (`vainfo` sert à le vérifier) ;
+  1080p saccade ou se fige, ainsi que `vainfo` et `mesa-utils`, pour que le
+  diagnostic dise si la puce décode et si l'écran est accéléré ;
 - `qpdfview-translations`, la traduction du lecteur PDF. Lubuntu 26.04 l'a
   déjà ; c'est ici une simple garantie. qpdfview suit la langue de la session :
   il n'est en anglais que dans une session anglaise, comme la session live ;
@@ -126,7 +127,13 @@ l'installation de Lubuntu : SigilDesk ne change ni la langue ni le fuseau
 horaire du système.
 
 Lubuntu fournit déjà PCManFM-Qt, LXImage-Qt, qpdfview, VLC et Firefox, avec les
-bonnes associations de fichiers (vérifié dans la VM). Pour contrôler :
+bonnes associations de fichiers (vérifié dans la VM). Pour contrôler, sans rien
+modifier : applications et associations, puis matériel et pilotes (rendu
+graphique accéléré ou logiciel, décodage vidéo, appareils PCI et USB sans
+pilote, son, micrologiciels non trouvés au démarrage, pilotes additionnels
+proposés), chaque ligne donnant la commande conseillée. `installer.sh` l'affiche
+en fin d'installation, et *Paramètres › Applications › Vérifier* le rejoue
+(capture : [docs/captures/verification.png](docs/captures/verification.png)) :
 
 ```bash
 scripts/check-deps.sh
@@ -138,7 +145,7 @@ scripts/check-deps.sh
 uv venv .venv && uv pip install --python .venv/bin/python -r requirements-dev.txt
 ./run.sh --windowed --size 1366x768
 ./run.sh --windowed --size 1024x600 --root /tmp/essai-sigildesk   # réglages jetables
-./run-tests.sh                                                     # 178 tests, ~25 s
+./run-tests.sh                                                     # 208 tests, ~40 s
 .venv/bin/ruff check sigildesk tests scripts                       # lint (config dans pyproject.toml)
 ```
 

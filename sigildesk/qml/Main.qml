@@ -267,6 +267,11 @@ Window {
             else if (name === "apropos") settingsPanel.openSectionNamed("apropos")
             else if (name === "redemarrer") rebootDialog.open()
             else if (name === "maintenance") settingsPanel.openSectionNamed("maintenance")
+            else if (name === "verification") {
+                settingsPanel.openSectionNamed("applications")
+                settingsPanel.scrollToReport = true
+                settingsPanel.startChecking()
+            }
         }
     }
 

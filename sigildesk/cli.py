@@ -9,7 +9,7 @@ from sigildesk import APP_NAME, __version__
 
 PANELS = (
     "favoris", "parametres", "dossiers", "fonds", "eteindre", "editeur", "meteo", "apropos", "redemarrer",
-    "maintenance",
+    "maintenance", "verification",  # verification : Applications, vérification lancée, capture après le rapport
 )
 
 

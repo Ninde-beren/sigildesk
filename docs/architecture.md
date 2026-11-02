@@ -64,6 +64,15 @@ mise en cache, et les propriétés changent. Un numéro de génération écarte 
 réponse arrivée après un changement de ville. Tout est asynchrone sur la boucle
 Qt : aucun fil.
 
+**Diagnostic.** `--doctor` (`doctor.py`) et *Paramètres › Applications ›
+Vérifier* (`runDiagnostics`, dans un fil) posent les mêmes questions : outils
+trouvés (`domain.commands`), associations de fichiers (`infra.xdg`), puis
+matériel et pilotes (`infra.hardware` : rendu graphique, décodage vidéo, PCI,
+USB, son, micrologiciels, pilotes additionnels). Chaque sonde lit une commande
+ou un fichier du système par un `runner` injectable et répond « ok »,
+« attention » ou « absent » (non vérifiable), avec la commande conseillée,
+jamais exécutée. `installer.sh` affiche ce diagnostic en fin d'installation.
+
 ## Invariants (ne pas casser)
 
 - **Aucune commande ne vient du JSON.** Les programmes possibles sont dans

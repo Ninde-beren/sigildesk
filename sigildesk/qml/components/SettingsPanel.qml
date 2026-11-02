@@ -14,8 +14,9 @@ PanelFrame {
     property int section: 0
     property var tools: []
     property var associations: []
-    property var decoding: ({})  // rapport du décodage vidéo matériel (status, label, hint)
+    property var hardware: []  // matériel et pilotes : {id, label, status, detail, hint}
     property bool checking: false
+    property bool scrollToReport: false  // capture « verification » : faire défiler jusqu'au rapport matériel
     signal wallpaperRequested()
     signal minimizeRequested()
     signal quitRequested()
@@ -34,12 +35,18 @@ PanelFrame {
         openSection(Math.max(0, sectionIds.indexOf(name)))
     }
 
+    // Lance la vérification des applications, du matériel et des pilotes (bouton, ou capture « verification »).
+    function startChecking() {
+        checking = true
+        app.runDiagnostics()
+    }
+
     Connections {
         target: app
-        function onDiagnosticsReady(toolList, associationList, decodingReport) {
+        function onDiagnosticsReady(toolList, associationList, hardwareList) {
             panel.tools = toolList
             panel.associations = associationList
-            panel.decoding = decodingReport
+            panel.hardware = hardwareList
             panel.checking = false
         }
     }
@@ -98,6 +105,8 @@ PanelFrame {
         clip: true
         contentHeight: pages.height
         boundsBehavior: Flickable.StopAtBounds
+        // Capture « verification » : suivre la fin du contenu à mesure que le rapport s'ajoute.
+        onContentHeightChanged: if (panel.scrollToReport) contentY = Math.max(0, contentHeight - height)
 
         Item {
             id: pages
@@ -434,9 +443,9 @@ PanelFrame {
                 Row {
                     spacing: 12
                     SdButton {
-                        text: panel.checking ? "Vérification…" : "Vérifier les applications"
+                        text: panel.checking ? "Vérification…" : "Vérifier les applications et le matériel"
                         enabled: !panel.checking
-                        onClicked: { panel.checking = true; app.runDiagnostics() }
+                        onClicked: panel.startChecking()
                     }
                 }
                 Repeater {
@@ -450,16 +459,21 @@ PanelFrame {
                         color: modelData.path ? theme.textColor : theme.mutedColor
                     }
                 }
-                Text {
-                    visible: panel.decoding.status !== undefined
-                    width: applications.width
-                    wrapMode: Text.WordWrap
-                    text: (panel.decoding.status === "ok" ? "✓  " : panel.decoding.status === "aucun" ? "!  " : "–  ")
-                        + "Décodage vidéo matériel : " + panel.decoding.label
-                        + (panel.decoding.hint ? " — " + panel.decoding.hint : "")
-                    font.pixelSize: theme.fontBody
-                    color: panel.decoding.status === "ok" ? theme.textColor
-                         : panel.decoding.status === "aucun" ? theme.danger : theme.mutedColor
+                Item { width: 1; height: panel.hardware.length ? 8 : 0 }
+                Repeater {
+                    // Matériel et pilotes, en lecture seule : ok (✓), à regarder (!), non vérifiable (–).
+                    model: panel.hardware
+                    delegate: Text {
+                        required property var modelData
+                        width: applications.width
+                        wrapMode: Text.WordWrap
+                        text: (modelData.status === "ok" ? "✓  " : modelData.status === "attention" ? "!  " : "–  ")
+                            + modelData.label + " : " + modelData.detail
+                            + (modelData.hint ? " — " + modelData.hint : "")
+                        font.pixelSize: theme.fontBody
+                        color: modelData.status === "ok" ? theme.textColor
+                             : modelData.status === "attention" ? theme.danger : theme.mutedColor
+                    }
                 }
                 Item { width: 1; height: panel.associations.length ? 8 : 0 }
                 Repeater {

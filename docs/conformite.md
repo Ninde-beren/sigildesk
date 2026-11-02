@@ -1,6 +1,6 @@
 # Conformité — SigilDesk 1.0
 
-État au 2026-11-01. **Testé** : vérifié par la suite automatique (172 tests)
+État au 2026-11-02. **Testé** : vérifié par la suite automatique (208 tests)
 dans deux environnements. Le premier est le venv de développement (PySide6 6.12,
 Python 3.12). Le second est le conteneur Ubuntu 26.04 (`scripts/test-lubuntu.sh`),
 avec PySide6 6.10.2 et Python 3.14 des paquets de la distribution, ceux de
@@ -96,4 +96,4 @@ redémarrage réels sur l'installation (et non sur la session live).
 | Pas d'erreur d'économiseur d'écran au réveil (sans verrouilleur) | **Testé** / vu sur l'ASUS (réglage à la main) | `test_branding.SessionLockTests`, `test_scripts`. Sur l'ASUS, la case de LXQt décochée a supprimé l'erreur ; l'installation le fait désormais d'office. |
 | Icône Wi-Fi à jour (au réveil notamment) | **Testé** (relevé toutes les 3 s) / **à valider sur ASUS** | Relevé passé de 30 s à 3 s (`test_system_status`). |
 | Performances sur N3060 / 4 Go | **Non testé** | À mesurer avec `scripts/measure.py` sur l'ASUS. |
-| Lecture MP4 720p fluide, PDF, clé USB | **Non testé** | Dépend de VLC/mpv, qpdfview et du matériel : [tests-manuels.md](tests-manuels.md). Depuis le 2026-11-01, `install-system-deps.sh` pose le pilote VA-API `i965-va-driver` (décodage H.264/HEVC par la puce) et `--doctor` / *Paramètres › Applications* disent si la puce décode (`infra/video_decoding.py`, `test_video_decoding`). |
+| Lecture MP4 720p fluide, PDF, clé USB | **Vidéo validée sur l'ASUS** (2026-11-02, avec `i965-va-driver`) ; PDF et clé : à valider | Dépend de VLC/mpv, qpdfview et du matériel : [tests-manuels.md](tests-manuels.md). Depuis le 2026-11-01, `install-system-deps.sh` pose le pilote VA-API `i965-va-driver` (décodage H.264/HEVC par la puce) et `--doctor` / *Paramètres › Applications* disent si la puce décode (`infra/video_decoding.py`, `test_video_decoding`). |

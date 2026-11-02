@@ -8,8 +8,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     QT_QPA_PLATFORM=offscreen \
     SIGILDESK_PYTHON=/usr/bin/python3
 
-# Seule la liste commune : VLC et le pilote VA-API (scripts/apt-packages-asus.txt)
-# sont propres à l'ASUS, inutiles sans écran ni carte graphique.
+# Seule la liste commune : VLC, le pilote VA-API et les outils de vérification
+# (scripts/apt-packages-asus.txt) sont propres à l'ASUS, inutiles sans écran ni
+# carte graphique.
 COPY scripts/apt-packages.txt /tmp/apt-packages.txt
 RUN apt-get update \
  && apt-get install -y --no-install-recommends python3 xdg-utils fonts-noto-core $(grep -v '^\s*\(#\|$\)' /tmp/apt-packages.txt) \

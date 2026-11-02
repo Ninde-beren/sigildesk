@@ -35,6 +35,7 @@ SHOTS = [
     ("parametres.png", "1366x768", False, "aube", "parametres", True),
     ("parametres-confort.png", "1366x768", True, "orbite", "parametres", True),
     ("dossiers.png", "1366x768", False, "aube", "dossiers", True),
+    ("verification.png", "1366x768", False, "aube", "verification", True),  # matériel du poste qui capture
     ("meteo.png", "1366x768", False, "aube", "meteo", True),
     ("a-propos.png", "1366x768", False, "aube", "apropos", True),
     ("fond-ecran.png", "1366x768", False, "orbite", "fonds", True),

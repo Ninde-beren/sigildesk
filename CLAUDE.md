@@ -43,6 +43,11 @@ Le cahier des charges est dans `../docs/`. Les documents livrés à l'utilisateu
 - Mises à jour : SigilDesk n'installe rien ; il observe (`infra/updates.py`,
   `ui/update_monitor.py`) et propose de redémarrer. Le réglage système vit dans
   `data/52sigildesk-mises-a-jour`, posé par `install-system-deps.sh`.
+- Matériel et pilotes : `infra/hardware.py` observe seulement (rendu graphique,
+  décodage vidéo, PCI, USB, son, micrologiciels, pilotes additionnels) pour
+  `--doctor`, Paramètres › Applications et la fin d'`installer.sh`. Chaque sonde
+  reçoit son `runner` et répond « ok », « attention » ou « absent », avec la
+  commande conseillée, que SigilDesk n'exécute jamais (ajout du 2026-11-02).
 - Fenêtres ouvertes : `domain/windows.py`, `infra/window_manager.py`,
   `ui/windows_model.py` (wmctrl, X11). Elles vivent dans leur
   propre barre, en haut au centre du bandeau, jamais mêlées au dock (décision d'Antoine,
@@ -66,7 +71,7 @@ Le cahier des charges est dans `../docs/`. Les documents livrés à l'utilisateu
 
 ```bash
 ./run.sh --windowed --size 1366x768        # lancer (venv .venv si présent)
-./run-tests.sh                              # ~175 tests, ~25 s, rendu hors écran
+./run-tests.sh                              # ~210 tests, ~40 s, rendu hors écran
 scripts/test-lubuntu.sh                     # mêmes tests dans Ubuntu 26.04 (PySide6 6.10 de la distribution)
 .venv/bin/python scripts/capture.py         # régénère docs/captures/
 python3 scripts/vm-demo.py                  # VM ouverte sur l'accueil : enregistre la démo (build/video/)

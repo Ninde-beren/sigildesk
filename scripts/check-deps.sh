@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Diagnostic sans rien modifier : PySide6, modules QML, formats d'image,
-# applications (Chromium, PCManFM-Qt, LXImage-Qt, VLC/mpv, qpdfview),
-# extinction par la session et associations de fichiers.
+# applications (Chromium, PCManFM-Qt, LXImage-Qt, VLC/mpv, qpdfview), matériel
+# et pilotes (rendu graphique, décodage vidéo, PCI, USB, son, micrologiciels,
+# pilotes additionnels), extinction par la session et associations de fichiers.
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 cd "$SRC"
